@@ -26,7 +26,7 @@ test('envia arquivo no campo file sem definir o content-type manualmente', async
     assert.equal(url, '/api/upload');
     assert.equal(options.method, 'POST');
     assert.equal(options.body.get('file'), file);
-    assert.equal(options.headers, undefined);
+    assert.deepEqual(options.headers, { 'X-DMS-Request': '1' });
     return Response.json({ id: '1' }, { status: 201 });
   };
 

@@ -14,6 +14,18 @@ app.use(express.json());
 
 if (localUserEnabled) {
   app.use((req, res, next) => {
+    if (
+      req.method === 'POST'
+      && (req.get('origin') || req.get('sec-fetch-site'))
+      && req.get('x-dms-request') !== '1'
+    ) {
+      return res.status(403).json({
+        error: {
+          code: 'INVALID_ORIGIN',
+          message: 'Requisição de navegador não autorizada.',
+        },
+      });
+    }
     req.user = { id: 'local-user' };
     next();
   });
@@ -52,10 +64,29 @@ app.use((error, req, res, next) => {
     });
   }
 
-  res.status(error.status || 500).json({
+  if (['UNAUTHENTICATED', 'DOCUMENT_NOT_FOUND', 'INVALID_MULTIPART', 'STORAGE_FULL'].includes(error.code)) {
+    return res.status(error.status).json({
+      error: { code: error.code, message: error.message },
+    });
+  }
+
+  if (error.status === 400) {
+    return res.status(400).json({
+      error: { code: 'INVALID_REQUEST', message: 'A requisição é inválida.' },
+    });
+  }
+
+  if (error.status === 413) {
+    return res.status(413).json({
+      error: { code: 'REQUEST_TOO_LARGE', message: 'A requisição excede o tamanho permitido.' },
+    });
+  }
+
+  console.error('Erro interno no backend:', error);
+  res.status(500).json({
     error: {
-      code: error.code || 'INTERNAL_ERROR',
-      message: error.status ? error.message : 'Ocorreu um erro interno.',
+      code: 'INTERNAL_ERROR',
+      message: 'Ocorreu um erro interno.',
     },
   });
 });

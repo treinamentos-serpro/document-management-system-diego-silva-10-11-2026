@@ -39,7 +39,11 @@ export async function listDocuments(options = {}) {
 export async function uploadDocument(file) {
   const formData = new FormData();
   formData.append('file', file);
-  const response = await request('/upload', { method: 'POST', body: formData });
+  const response = await request('/upload', {
+    method: 'POST',
+    body: formData,
+    headers: { 'X-DMS-Request': '1' },
+  });
   return response.json();
 }
 

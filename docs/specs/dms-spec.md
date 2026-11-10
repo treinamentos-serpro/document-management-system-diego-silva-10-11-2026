@@ -138,8 +138,10 @@ Os códigos são estáveis para consumo por clientes. Usar, conforme o caso, `FI
 - `repositories` cuidam dos metadados em memória e do acesso ao filesystem local. O nome/caminho interno gerado permanece restrito a essa camada.
 - Frontend em React, com componentes e chamadas `fetch` usando o prefixo `/api` do proxy do Vite.
 - Configuração do servidor por variáveis de ambiente: `PORT` (padrão `3000`), `STORAGE_DIR` (padrão `backend/storage`) e `MAX_FILE_SIZE_BYTES` (padrão `10485760`). O caminho de armazenamento deve permanecer local à aplicação.
+- Uploads também são limitados por `MAX_STORAGE_BYTES` (padrão 1 GiB) e `UPLOAD_RATE_LIMIT` (padrão 100 tentativas por endereço em 15 minutos). A cota reserva o tamanho máximo por upload em andamento e é válida para um único processo; use uma cota de filesystem e limitação no proxy para múltiplos processos. O limite de armazenamento retorna `507` e o limite de frequência retorna `429`.
 - A autenticação e a forma de fornecer a identidade confiável do usuário são uma dependência a decidir; não aceitar um identificador arbitrário enviado pelo cliente como prova de identidade.
 - Para desenvolvimento local, `DMS_LOCAL_USER=true` com `NODE_ENV=development` habilita uma identidade fixa compartilhada e restringe o servidor a `127.0.0.1`. Esse modo não autentica usuários nem fornece isolamento e não deve ser exposto à rede.
+- No modo local, uploads de navegador exigem o cabeçalho `X-DMS-Request: 1`; essa medida não substitui autenticação nem a restrição de acesso à rede.
 - Os metadados em memória são voláteis. A divergência entre arquivos persistidos no disco e metadados perdidos após reinicialização é uma limitação conhecida desta fase.
 
 ## 8. Plano de execução

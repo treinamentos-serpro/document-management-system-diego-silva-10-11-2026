@@ -13,7 +13,9 @@ async function upload(file, owner) {
   try {
     await documentRepository.create(document, file.path);
   } catch (error) {
-    await documentRepository.removeFile(file.path).catch(() => {});
+    await documentRepository.removeFile(file.path).catch((cleanupError) => {
+      console.error('Não foi possível remover o arquivo após falha no upload:', cleanupError);
+    });
     throw error;
   }
 

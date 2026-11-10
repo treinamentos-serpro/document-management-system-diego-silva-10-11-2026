@@ -33,8 +33,19 @@ async function list(req, res) {
 
 async function download(req, res, next) {
   const document = await documentService.getDownload(req.params.id, req.documentOwner);
+  res.type(document.originalName);
   res.download(document.storagePath, document.originalName, (error) => {
-    if (error && !res.headersSent) {
+    if (error) {
+      if (!res.headersSent) {
+        res.removeHeader('Content-Type');
+        res.removeHeader('Content-Disposition');
+        if (error.code === 'ENOENT') {
+          return next(Object.assign(new Error('Documento não encontrado.'), {
+            status: 404,
+            code: 'DOCUMENT_NOT_FOUND',
+          }));
+        }
+      }
       next(error);
     }
   });
