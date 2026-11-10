@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "node --watch src/app.js",
+    "dev": "NODE_ENV=development DMS_LOCAL_USER=true node --watch src/app.js",
     "test": "node --test"
   },
   "keywords": [
@@ -17,6 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "5.2.1",
-    "multer": "2.2.0"
+    "express-rate-limit": "^8.7.4",
+    "multer": "2.5.0"
   }
 }
