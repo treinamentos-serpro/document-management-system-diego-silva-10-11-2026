@@ -1,6 +1,6 @@
 name: Passo 1, Planejamento
 
-# Valida a especificação gerada no Plan Mode, publica o Passo 2 e habilita o
+# Valida sa especificação gerada no Plan Mode, publica o Passo 2 e habilita o
 # próximo workflow.
 
 on:
