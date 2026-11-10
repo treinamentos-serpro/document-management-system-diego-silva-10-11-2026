@@ -1,6 +1,6 @@
 name: Bem-vindo
 
-# Dispara no primeiro push após a criação do repositório a partir do template.
+# Disparas no primeiro push após a criação do repositório a partir do template.
 # Cria a issue de acompanhamento, publica o setup e o Passo 1, habilita o
 # workflow do Passo 1 e se autodesabilita (evita re-disparar nos merges
 # posteriores para a main).
