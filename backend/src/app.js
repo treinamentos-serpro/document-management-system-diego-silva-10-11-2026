@@ -4,8 +4,20 @@ const documentRoutes = require('./routes/documents.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const localUserEnabled = process.env.DMS_LOCAL_USER === 'true';
+
+if (localUserEnabled && process.env.NODE_ENV !== 'development') {
+  throw new Error('DMS_LOCAL_USER só pode ser habilitado com NODE_ENV=development.');
+}
 
 app.use(express.json());
+
+if (localUserEnabled) {
+  app.use((req, res, next) => {
+    req.user = { id: 'local-user' };
+    next();
+  });
+}
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
@@ -49,7 +61,10 @@ app.use((error, req, res, next) => {
 });
 
 if (require.main === module) {
-  app.listen(PORT, () => {
+  if (localUserEnabled) {
+    console.warn('Modo local ativo: todos os acessos compartilham o mesmo usuário.');
+  }
+  app.listen(PORT, localUserEnabled ? '127.0.0.1' : undefined, () => {
     console.log(`DMS backend ouvindo na porta ${PORT}`);
   });
 }

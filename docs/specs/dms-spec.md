@@ -139,6 +139,7 @@ Os códigos são estáveis para consumo por clientes. Usar, conforme o caso, `FI
 - Frontend em React, com componentes e chamadas `fetch` usando o prefixo `/api` do proxy do Vite.
 - Configuração do servidor por variáveis de ambiente: `PORT` (padrão `3000`), `STORAGE_DIR` (padrão `backend/storage`) e `MAX_FILE_SIZE_BYTES` (padrão `10485760`). O caminho de armazenamento deve permanecer local à aplicação.
 - A autenticação e a forma de fornecer a identidade confiável do usuário são uma dependência a decidir; não aceitar um identificador arbitrário enviado pelo cliente como prova de identidade.
+- Para desenvolvimento local, `DMS_LOCAL_USER=true` com `NODE_ENV=development` habilita uma identidade fixa compartilhada e restringe o servidor a `127.0.0.1`. Esse modo não autentica usuários nem fornece isolamento e não deve ser exposto à rede.
 - Os metadados em memória são voláteis. A divergência entre arquivos persistidos no disco e metadados perdidos após reinicialização é uma limitação conhecida desta fase.
 
 ## 8. Plano de execução
